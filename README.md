@@ -33,3 +33,36 @@ Em **Conectores > Adicionar conector > Novo conector custom**:
 - URL do repositório: `https://github.com/guijasss/sdk-connector-demo.git`
 - Caminho: `connectors/pokedex`
 - Ref: `main`
+
+# Conector TMDB
+
+Conector para a [The Movie Database API v3](https://developer.themoviedb.org),
+em `connectors/tmdb`. Exercita o caminho com credencial do SDK.
+
+| Recurso | Linhas | Colunas |
+|---|---|---|
+| `genres` | ~19 gêneros de filme | `id`, `name` |
+| `popular_movies` | 20 por página, até 500 páginas | `id`, `title`, `original_title`, `original_language`, `release_date`, `popularity`, `vote_average`, `vote_count`, `genre_ids`, `adult`, `overview`, `poster_path` |
+
+Campos do wizard:
+
+- **Token de leitura da API (v4)**, obrigatório: em themoviedb.org, Settings >
+  API, o "API Read Access Token" (não a "API Key" v3). Vai como
+  `Authorization: Bearer`.
+- **Idioma dos dados**, opcional (`pt-BR`, `en-US`...).
+- **Limite de páginas de filmes**, opcional. Sem limite, a leitura vai até 500
+  páginas (10.000 filmes).
+
+O teste de conexão chama `/authentication`: token inválido vira "A API recusou
+as credenciais". Os dois recursos são full refresh.
+
+Rodar localmente:
+
+```bash
+# creds.tmdb.json (ignorado pelo git): {"api_token": "<token>", "language": "pt-BR", "max_pages": "2"}
+strattum-connector check connectors/tmdb --creds creds.tmdb.json
+strattum-connector read genres connectors/tmdb --creds creds.tmdb.json
+strattum-connector read popular_movies connectors/tmdb --creds creds.tmdb.json --limit 5
+```
+
+Registro na Strattum: mesmo repositório, caminho `connectors/tmdb`, ref `main`.
